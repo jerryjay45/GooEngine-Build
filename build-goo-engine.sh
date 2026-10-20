@@ -3,8 +3,10 @@
 #
 # Uses Blender's own tooling so the build matches upstream:
 #   1. install_linux_packages.py installs build dependencies for your distro
-#   2. `make update` fetches submodules and the precompiled libraries
-#      (bundled Python, FFmpeg, OpenEXR, ...), avoiding system-library mismatches
+#   2. make_update.py --use-linux-libraries fetches submodules and the precompiled
+#      libraries (bundled Python 3.11, FFmpeg, OpenEXR, ...). Upstream makes the Linux
+#      libraries opt-in, so a plain `make update` skips them and the build falls back
+#      to system libraries (which fails on distros with a newer Python).
 #   3. `make` builds; the result lands in <workdir>/build_linux/bin
 #
 # Untested draft - please report issues.
@@ -82,12 +84,17 @@ if (( ! SKIP_DEPS )); then
   else
     echo "Dependency installer not found on this branch; install Blender's build dependencies manually."
   fi
-  command -v svn >/dev/null || echo "Warning: 'svn' not found; 'make update' may need subversion."
 fi
 
 # --- submodules and precompiled libs --------------------------------------
-echo "==> Fetching submodules and precompiled libraries..."
-make update
+echo "==> Fetching submodules and precompiled libraries (large download)..."
+python3 build_files/utils/make_update.py --use-linux-libraries
+
+if [[ -z "$(ls -A lib/linux_x64 2>/dev/null)" ]]; then
+  echo "Precompiled libraries were not fetched (lib/linux_x64 is empty)." >&2
+  echo "The build would fall back to system libraries and likely fail on Python 3.11." >&2
+  exit 1
+fi
 
 # --- build -----------------------------------------------------------------
 echo "==> Building with $JOBS jobs..."

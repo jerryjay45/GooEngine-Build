@@ -40,5 +40,6 @@ Without `--prefix`, the binary is at `work/build_linux/bin/blender`.
 
 - **Out of memory / killed:** reduce `-j`.
 - **Out of disk space:** use `-w` to build on a larger drive.
-- **`make update` fails:** install `subversion` and `git-lfs`, then re-run.
+- **Library download fails:** make sure `git-lfs` is installed (the libraries come from `projects.blender.org` via Git LFS and are several GB), then re-run.
+- **`PYTHON_VERSION=3.11 not found`:** the precompiled libraries weren't fetched (upstream makes them opt-in on Linux). The script enables them; if you hit this from an older run, delete `work/build_linux` and re-run.
 - **Dependency installer fails on your distro:** install Blender's build dependencies manually and use `--skip-deps`.
