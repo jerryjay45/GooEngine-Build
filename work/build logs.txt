@@ -1,0 +1,150 @@
+./build-goo-engine.sh
+==> Cloning https://github.com/dillongoostudios/goo-engine.git (goo-engine-v4.4-release)...
+Cloning into '/home/shaq/Projects/GooEngine-Build/work/goo-engine'...
+remote: Enumerating objects: 1882348, done.
+remote: Counting objects: 100% (6/6), done.
+remote: Compressing objects: 100% (4/4), done.
+remote: Total 1882348 (delta 2), reused 2 (delta 2), pack-reused 1882342 (from 2)
+Receiving objects: 100% (1882348/1882348), 836.19 MiB | 19.19 MiB/s, done.
+Resolving deltas: 100% (1622132/1622132), done.
+Updating files: 100% (19277/19277), done.
+==> Installing build dependencies (may ask for sudo)...
+INFO:     Distribution identified as 'arch'
+INFO:     Trying to update packages info.
+[sudo] password for shaq:
+INFO:     Done.
+
+INFO:     Trying to install group of packages Basics Mandatory Build.
+INFO:           Installing packages base-devel, git, git-lfs, cmake.
+INFO:     Done.
+
+INFO:     Trying to install group of packages Basics Optional Build.
+INFO:           Installing packages ninja, patch.
+INFO:     Done.
+
+INFO:     Trying to install group of packages Basic Critical Deps.
+INFO:           Installing packages libx11, libxxf86vm, libxcursor, libxi, libxrandr, libxinerama, libxkbcommon, wayland, libdecor, wayland-protocols, dbus, libglvnd.
+INFO:     Done.
+
+Warning: 'svn' not found; 'make update' may need subversion.
+==> Fetching submodules and precompiled libraries...
+git lfs install --skip-repo
+Git LFS initialized.
+
+Updating Blender Git Repository
+===============================
+
+git pull --rebase
+Already up to date.
+
+Configuring Precompiled Libraries
+=================================
+
+Detected platform     : linux
+Detected architecture : x64
+
+Skipping Linux libraries configuration
+
+Updating Libraries
+==================
+
+* Updating lib/linux_x64 ...
+GIT_LFS_SKIP_SMUDGE=1 git submodule update --init --progress lib/linux_x64
+Submodule 'lib/linux_x64' (https://projects.blender.org/blender/lib-linux_x64.git) registered for path 'lib/linux_x64'
+Skipping submodule 'lib/linux_x64'
+git -C lib/linux_x64 lfs pull
+* Updating lib/macos_arm64 ...(5664/5664), 1.2 GB | 9.5 MB/s
+GIT_LFS_SKIP_SMUDGE=1 git submodule update --init --progress lib/macos_arm64
+Submodule 'lib/macos_arm64' (https://projects.blender.org/blender/lib-macos_arm64.git) registered for path 'lib/macos_arm64'
+Skipping submodule 'lib/macos_arm64'
+git -C lib/macos_arm64 lfs pull
+* Updating lib/macos_x64 ...
+GIT_LFS_SKIP_SMUDGE=1 git submodule update --init --progress lib/macos_x64
+Submodule 'lib/macos_x64' (https://projects.blender.org/blender/lib-macos_x64.git) registered for path 'lib/macos_x64'
+Skipping submodule 'lib/macos_x64'
+git -C lib/macos_x64 lfs pull
+* Updating lib/windows_x64 ...
+GIT_LFS_SKIP_SMUDGE=1 git submodule update --init --progress lib/windows_x64
+Submodule 'lib/windows_x64' (https://projects.blender.org/blender/lib-windows_x64.git) registered for path 'lib/windows_x64'
+Skipping submodule 'lib/windows_x64'
+git -C lib/windows_x64 lfs pull
+* Updating lib/windows_arm64 ...
+GIT_LFS_SKIP_SMUDGE=1 git submodule update --init --progress lib/windows_arm64
+Submodule 'lib/windows_arm64' (https://projects.blender.org/blender/lib-windows_arm64.git) registered for path 'lib/windows_arm64'
+Skipping submodule 'lib/windows_arm64'
+git -C lib/windows_arm64 lfs pull
+* Updating release/datafiles/assets ...
+GIT_LFS_SKIP_SMUDGE=1 git submodule update --init --progress release/datafiles/assets
+Submodule 'release/datafiles/assets' (https://projects.blender.org/blender/blender-assets.git) registered for path 'release/datafiles/assets'
+Cloning into '/home/shaq/Projects/GooEngine-Build/work/goo-engine/release/datafiles/assets'...
+remote: Enumerating objects: 3425, done.
+remote: Counting objects: 100% (636/636), done.
+remote: Compressing objects: 100% (230/230), done.
+remote: Total 3425 (delta 585), reused 406 (delta 406), pack-reused 2789 (from 1)
+Receiving objects: 100% (3425/3425), 496.54 KiB | 1.12 MiB/s, done.
+Resolving deltas: 100% (1059/1059), done.
+Submodule path 'release/datafiles/assets': checked out '0418ad6b8e0d962bde30b2d4d828984b9f9c3299'
+git -C release/datafiles/assets lfs pull
+* Updating tests/data ...100% (163/163), 739 MB | 22 MB/s
+GIT_LFS_SKIP_SMUDGE=1 git submodule update --init --progress tests/data
+Submodule 'tests/data' (https://projects.blender.org/blender/blender-test-data.git) registered for path 'tests/data'
+Skipping submodule 'tests/data'
+git -C tests/data lfs pull
+Setting pushURL to git@projects.blender.org:blender/blender-assets.git for release/datafiles/assets
+==> Building with 6 jobs...
+
+Configuring Blender in "/home/shaq/Projects/GooEngine-Build/work/build_linux" ...
+-- The C compiler identification is GNU 16.2.1
+-- The CXX compiler identification is GNU 16.2.1
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: /usr/bin/cc - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: /usr/bin/c++ - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Looking for malloc_stats
+-- Looking for malloc_stats - found
+-- Looking for feenableexcept
+-- Looking for feenableexcept - not found
+-- Looking for include file execinfo.h
+-- Looking for include file execinfo.h - found
+-- Found Git: /usr/bin/git (found version "2.56.0")
+-- Performing Test SUPPORT_NEON_BUILD
+-- Performing Test SUPPORT_NEON_BUILD - Failed
+-- Performing Test SUPPORT_SSE42_BUILD
+-- Performing Test SUPPORT_SSE42_BUILD - Success
+-- Unable to find LIBDIR: "". system libraries may be used (disable WITH_LIBS_PRECOMPILED to suppress this message).
+-- WITH_LIBS_PRECOMPILED is disabled, setting WITH_CPU_CHECK=OFF
+-- Found JPEG: /usr/lib/libjpeg.so (found version "80")
+-- Found ZLIB: /usr/lib/libz.so (found version "1.3.1")
+-- Found PNG: /usr/lib/libpng.so (found version "1.6.59")
+-- Found Zstd: /usr/lib/libzstd.so
+-- Found Epoxy: /usr/lib/libepoxy.so
+-- Found TIFF: /usr/lib/cmake/tiff (found version "4.7.2")
+-- Found PkgConfig: /usr/bin/pkg-config (found version "3.0.7")
+-- Checking for module 'vulkan'
+--   Found vulkan, version 1.4.363
+-- Checking for module 'shaderc'
+--   Found shaderc, version 2026.4.1
+-- Found Freetype: /usr/lib/libfreetype.so (found version "2.15.0")
+-- Looking for FT_CONFIG_OPTION_USE_BROTLI
+-- Looking for FT_CONFIG_OPTION_USE_BROTLI - found
+CMake Error at /usr/share/cmake/Modules/FindPackageHandleStandardArgs.cmake:290 (message):
+  'PYTHON_VERSION=3.11' not found! This is the only officially supported
+  version.  If you wish to use a newer Python version you may set
+  'PYTHON_VERSION' however we do not guarantee full compatibility in this
+  case.  (missing: PYTHON_LIBRARY PYTHON_LIBPATH PYTHON_INCLUDE_DIR
+  PYTHON_INCLUDE_CONFIG_DIR)
+Call Stack (most recent call first):
+  /usr/share/cmake/Modules/FindPackageHandleStandardArgs.cmake:654 (_FPHSA_FAILURE_MESSAGE)
+  build_files/cmake/Modules/FindPythonLibsUnix.cmake:221 (find_package_handle_standard_args)
+  build_files/cmake/platform/platform_unix.cmake:230 (find_package)
+  CMakeLists.txt:1521 (include)
+
+
+-- Configuring incomplete, errors occurred!
+make: *** [GNUmakefile:379: all] Error 1
