@@ -3,7 +3,7 @@
 A build script for [Goo Engine](https://github.com/dillongoostudios/goo-engine),
 the toon/anime-focused Blender fork, on common Linux distributions.
 
-It clones the upstream repo (default branch `v4.4-release`), installs build
+It clones the upstream repo (default branch `goo-engine-v4.4-release`), installs build
 dependencies using Blender's own installer, fetches the precompiled libraries,
 and builds.
 
@@ -27,7 +27,7 @@ The first run takes a long time. Re-running updates the checkout and rebuilds in
 
 | Option | Meaning |
 | --- | --- |
-| `-b, --branch NAME` | Branch to build (default `v4.4-release`) |
+| `-b, --branch NAME` | Branch to build (default `goo-engine-v4.4-release`) |
 | `-r, --repo URL` | Source repo (default upstream Goo Engine) |
 | `-w, --workdir DIR` | Clone/build location (default `./work`) |
 | `-j, --jobs N` | Parallel jobs; lower it if you run out of RAM |
