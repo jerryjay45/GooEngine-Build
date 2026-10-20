@@ -12,7 +12,7 @@
 set -euo pipefail
 
 REPO_URL="https://github.com/dillongoostudios/goo-engine.git"
-BRANCH="goo-engine-v4.4-release"
+BRANCH="v4.4-release"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 WORKDIR="$SCRIPT_DIR/work"
 JOBS="$(nproc)"
