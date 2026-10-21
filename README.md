@@ -33,8 +33,19 @@ The first run takes a long time. Re-running updates the checkout and rebuilds in
 | `-j, --jobs N` | Parallel jobs; lower it if you run out of RAM |
 | `-p, --prefix DIR` | Copy the build to `DIR` and link `~/.local/bin/goo-engine` |
 | `--skip-deps` | Skip installing system packages |
+| `--cmake-arg ARG` | Extra CMake argument, repeatable (e.g. `--cmake-arg -DWITH_CYCLES=OFF`) |
+| `--with-haru` | Keep libharu (Grease Pencil PDF export); see Troubleshooting |
+
+`-j 6`, `-j6` and `--jobs=6` all work.
 
 Without `--prefix`, the binary is at `work/build_linux/bin/blender`.
+
+## Notes
+
+libharu (Grease Pencil PDF export) is disabled by default. Its static library needs
+symbols that a system `libtiff.so` doesn't export, and CMake can pick the system TIFF
+over the bundled one (seen on Arch/CachyOS: `undefined reference to TIFFFaxWhiteCodes`).
+Toon shading and everything else are unaffected. Use `--with-haru` to try enabling it.
 
 ## Troubleshooting
 

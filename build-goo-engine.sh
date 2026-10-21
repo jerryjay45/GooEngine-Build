@@ -20,6 +20,8 @@ WORKDIR="$SCRIPT_DIR/work"
 JOBS="$(nproc)"
 PREFIX=""
 SKIP_DEPS=0
+KEEP_HARU=0
+CMAKE_ARGS_STR=""
 
 usage() {
   cat <<USAGE
@@ -30,6 +32,8 @@ Usage: $0 [options]
   -j, --jobs N        parallel jobs (default: $(nproc); lower it if you run out of RAM)
   -p, --prefix DIR    copy the finished build to DIR and link ~/.local/bin/goo-engine
       --skip-deps     don't install system packages
+      --cmake-arg ARG extra CMake argument, repeatable (e.g. --cmake-arg -DWITH_CYCLES=OFF)
+      --with-haru     keep libharu (Grease Pencil PDF export); may fail to link, see README
   -h, --help          show this help
 USAGE
 }
@@ -40,12 +44,24 @@ while [[ $# -gt 0 ]]; do
     -r|--repo)    REPO_URL="$2"; shift 2 ;;
     -w|--workdir) WORKDIR="$2"; shift 2 ;;
     -j|--jobs)    JOBS="$2"; shift 2 ;;
+    -j[0-9]*)     JOBS="${1#-j}"; shift ;;
+    --jobs=*)     JOBS="${1#--jobs=}"; shift ;;
     -p|--prefix)  PREFIX="$2"; shift 2 ;;
     --skip-deps)  SKIP_DEPS=1; shift ;;
+    --cmake-arg)  CMAKE_ARGS_STR+=" $2"; shift 2 ;;
+    --with-haru)  KEEP_HARU=1; shift ;;
     -h|--help)    usage; exit 0 ;;
     *) echo "Unknown option: $1" >&2; usage; exit 1 ;;
   esac
 done
+
+# libharu (Grease Pencil PDF export) fails to link when CMake picks up a system
+# libtiff.so, which doesn't export the symbols libharu needs. It's off by default.
+if (( KEEP_HARU )); then
+  CMAKE_ARGS_STR+=" -DWITH_HARU=ON"
+else
+  CMAKE_ARGS_STR+=" -DWITH_HARU=OFF"
+fi
 
 SRC_DIR="$WORKDIR/goo-engine"
 BUILD_BIN="$WORKDIR/build_linux/bin"
@@ -97,9 +113,9 @@ if [[ -z "$(ls -A lib/linux_x64 2>/dev/null)" ]]; then
 fi
 
 # --- build -----------------------------------------------------------------
-echo "==> Building with $JOBS jobs..."
+echo "==> Building with $JOBS jobs (CMake args:${CMAKE_ARGS_STR})..."
 export MAKEFLAGS="-j${JOBS}"
-make -j"$JOBS"
+make -j"$JOBS" BUILD_CMAKE_ARGS="${CMAKE_ARGS_STR# }"
 
 [[ -x "$BUILD_BIN/blender" ]] || { echo "Build finished but $BUILD_BIN/blender is missing." >&2; exit 1; }
 
