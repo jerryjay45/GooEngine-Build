@@ -21,6 +21,8 @@ JOBS="$(nproc)"
 PREFIX=""
 SKIP_DEPS=0
 KEEP_HARU=0
+SEPARATE_CONFIG=0
+INSTALL_DESKTOP=1
 CMAKE_ARGS_STR=""
 
 usage() {
@@ -34,6 +36,8 @@ Usage: $0 [options]
       --skip-deps     don't install system packages
       --cmake-arg ARG extra CMake argument, repeatable (e.g. --cmake-arg -DWITH_CYCLES=OFF)
       --with-haru     keep libharu (Grease Pencil PDF export); may fail to link, see README
+      --separate-config  with --prefix: keep Goo's settings/add-ons apart from stock Blender
+      --no-desktop    with --prefix: don't install an application-menu entry
   -h, --help          show this help
 USAGE
 }
@@ -50,6 +54,8 @@ while [[ $# -gt 0 ]]; do
     --skip-deps)  SKIP_DEPS=1; shift ;;
     --cmake-arg)  CMAKE_ARGS_STR+=" $2"; shift 2 ;;
     --with-haru)  KEEP_HARU=1; shift ;;
+    --separate-config) SEPARATE_CONFIG=1; shift ;;
+    --no-desktop) INSTALL_DESKTOP=0; shift ;;
     -h|--help)    usage; exit 0 ;;
     *) echo "Unknown option: $1" >&2; usage; exit 1 ;;
   esac
@@ -121,11 +127,57 @@ make -j"$JOBS" BUILD_CMAKE_ARGS="${CMAKE_ARGS_STR# }"
 
 # --- optional install ------------------------------------------------------
 if [[ -n "$PREFIX" ]]; then
-  echo "==> Installing to $PREFIX..."
   mkdir -p "$PREFIX" "$HOME/.local/bin"
+  PREFIX="$(cd "$PREFIX" && pwd)"
+  echo "==> Installing to $PREFIX..."
   cp -a "$BUILD_BIN/." "$PREFIX/"
-  ln -sf "$PREFIX/blender" "$HOME/.local/bin/goo-engine"
-  echo "Launcher: ~/.local/bin/goo-engine (make sure ~/.local/bin is in your PATH)"
+
+  # Remove any old launcher first: writing through an old symlink would
+  # overwrite the blender binary it points to.
+  LAUNCHER="$HOME/.local/bin/goo-engine"
+  rm -f "$LAUNCHER"
+  if (( SEPARATE_CONFIG )); then
+    CONFIG_DIR="${XDG_CONFIG_HOME:-$HOME/.config}/goo-engine"
+    cat > "$LAUNCHER" <<LAUNCH
+#!/usr/bin/env bash
+# Keeps Goo Engine's settings, add-ons and extensions apart from stock Blender.
+export BLENDER_USER_RESOURCES="$CONFIG_DIR"
+mkdir -p "\$BLENDER_USER_RESOURCES"
+exec "$PREFIX/blender" "\$@"
+LAUNCH
+    chmod +x "$LAUNCHER"
+    echo "Launcher: $LAUNCHER (user data in $CONFIG_DIR)"
+  else
+    ln -s "$PREFIX/blender" "$LAUNCHER"
+    echo "Launcher: $LAUNCHER (shares ~/.config/blender with stock Blender; see --separate-config)"
+  fi
+  echo "Make sure ~/.local/bin is in your PATH."
+
+  if (( INSTALL_DESKTOP )); then
+    DATA_DIR="${XDG_DATA_HOME:-$HOME/.local/share}"
+    APPS_DIR="$DATA_DIR/applications"
+    ICON_DIR="$DATA_DIR/icons/hicolor/scalable/apps"
+    ICON_NAME="blender"
+    mkdir -p "$APPS_DIR" "$ICON_DIR"
+    if [[ -f "$PREFIX/blender.svg" ]]; then
+      cp "$PREFIX/blender.svg" "$ICON_DIR/goo-engine.svg"
+      ICON_NAME="goo-engine"
+    fi
+    # No MimeType on purpose: don't take over .blend files from stock Blender.
+    cat > "$APPS_DIR/goo-engine.desktop" <<DESKTOP
+[Desktop Entry]
+Type=Application
+Name=Goo Engine
+GenericName=3D modeler
+Comment=Blender fork with a toon/anime shading pipeline
+Exec="$LAUNCHER" %f
+Icon=$ICON_NAME
+Terminal=false
+Categories=Graphics;3DGraphics;
+DESKTOP
+    update-desktop-database "$APPS_DIR" 2>/dev/null || true
+    echo "Menu entry: $APPS_DIR/goo-engine.desktop"
+  fi
 else
   echo "==> Done. Run: $BUILD_BIN/blender"
 fi

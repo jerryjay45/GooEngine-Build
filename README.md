@@ -36,6 +36,9 @@ The first run takes a long time. Re-running updates the checkout and rebuilds in
 | `--cmake-arg ARG` | Extra CMake argument, repeatable (e.g. `--cmake-arg -DWITH_CYCLES=OFF`) |
 | `--with-haru` | Keep libharu (Grease Pencil PDF export); see Troubleshooting |
 
+| `--separate-config` | With `--prefix`: Goo gets its own settings, add-ons and extensions folder (`~/.config/goo-engine`) instead of sharing `~/.config/blender` with stock Blender |
+| `--no-desktop` | With `--prefix`: skip the application-menu entry |
+
 `-j 6`, `-j6` and `--jobs=6` all work.
 
 Without `--prefix`, the binary is at `work/build_linux/bin/blender`.
@@ -46,6 +49,9 @@ libharu (Grease Pencil PDF export) is disabled by default. Its static library ne
 symbols that a system `libtiff.so` doesn't export, and CMake can pick the system TIFF
 over the bundled one (seen on Arch/CachyOS: `undefined reference to TIFFFaxWhiteCodes`).
 Toon shading and everything else are unaffected. Use `--with-haru` to try enabling it.
+
+With `--prefix` the script also installs a menu entry and icon under `~/.local/share`.
+The entry deliberately doesn't register for `.blend` files, so it won't take them over from stock Blender.
 
 ## Troubleshooting
 
